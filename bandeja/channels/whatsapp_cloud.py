@@ -11,7 +11,7 @@ import requests
 from django.utils import timezone
 
 from bandeja.channels.base import ChannelAdapter, InboundMessage
-from bandeja.models import Canal, Mensaje
+from bandeja.models import Canal, Conversacion, Mensaje
 
 logger = logging.getLogger("bandeja.channels.whatsapp_cloud")
 
@@ -129,11 +129,16 @@ class WhatsAppCloudAdapter(ChannelAdapter):
         texto: str,
         usuario=None,
         es_nota_privada: bool = False,
+        conversacion: Conversacion | None = None,
         **kwargs,
     ) -> dict:
         """Envía un mensaje saliente. Persiste `Mensaje` siempre, llama a Meta
-        solo si NO es nota privada."""
+        solo si NO es nota privada.
+
+        Si `conversacion` es None, busca/crea una activa del contacto.
+        """
         canal = self.resolver_canal()
+        ahora = timezone.now()
 
         wa_id = ""
         result: dict = {}
@@ -155,18 +160,43 @@ class WhatsAppCloudAdapter(ChannelAdapter):
             wa_id = (result.get("messages") or [{}])[0].get("id", "")
 
         if not wa_id:
-            wa_id = f"local-{timezone.now().timestamp()}"
+            wa_id = f"local-{ahora.timestamp()}"
+
+        if conversacion is None:
+            conversacion = (
+                Conversacion.objects.filter(
+                    contacto=contacto,
+                    estado__in=Conversacion.ESTADOS_ACTIVOS,
+                )
+                .order_by("-fecha_apertura")
+                .first()
+            )
+            if conversacion is None:
+                conversacion = Conversacion.objects.create(
+                    contacto=contacto, canal=canal, estado="abierta",
+                )
 
         Mensaje.objects.create(
             contacto=contacto,
             canal=canal,
+            conversacion=conversacion,
             direccion="saliente",
             tipo_contenido="texto",
             contenido=texto,
             wa_message_id=wa_id,
+            es_nota_privada=es_nota_privada,
             enviado_por=usuario if (usuario and getattr(usuario, "is_authenticated", False)) else None,
-            timestamp=timezone.now(),
+            timestamp=ahora,
         )
-        contacto.fecha_ultimo_mensaje = timezone.now()
+
+        # SLA: marcar primera respuesta del agente (solo si NO es nota privada)
+        update_fields = ["fecha_ultimo_mensaje", "updated_at"]
+        conversacion.fecha_ultimo_mensaje = ahora
+        if not es_nota_privada and conversacion.primera_respuesta_at is None:
+            conversacion.primera_respuesta_at = ahora
+            update_fields.append("primera_respuesta_at")
+        conversacion.save(update_fields=update_fields)
+
+        contacto.fecha_ultimo_mensaje = ahora
         contacto.save(update_fields=["fecha_ultimo_mensaje", "updated_at"])
         return result

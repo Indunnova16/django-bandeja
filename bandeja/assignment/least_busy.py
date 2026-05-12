@@ -28,19 +28,11 @@ class LeastBusyStrategy(AgentAssignmentStrategy):
         User = get_user_model()
         qs = User.objects.filter(is_active=True, bandeja_profile__activo=True)
 
-        # Si el huésped tiene un modelo Oportunidad con FK asesor_asignado,
-        # anotamos cuántas oportunidades abiertas tiene cada agente.
-        if apps.is_installed("apps.comercial"):
-            try:
-                qs = qs.annotate(
-                    abiertas=Count(
-                        "oportunidades_asignadas",
-                        filter=Q(oportunidades_asignadas__estado__in=_ESTADOS_ABIERTOS),
-                    )
-                ).order_by("abiertas", "id")
-            except Exception:  # noqa: BLE001
-                qs = qs.order_by("id")
-        else:
-            qs = qs.order_by("id")
-
+        # Preferir el conteo de conversaciones bandeja activas (genérico).
+        qs = qs.annotate(
+            abiertas=Count(
+                "conversaciones_asignadas",
+                filter=Q(conversaciones_asignadas__estado__in=("abierta", "pendiente")),
+            )
+        ).order_by("abiertas", "id")
         return qs.first()

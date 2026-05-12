@@ -31,12 +31,23 @@ class Mensaje(TimeStampedModel):
     canal = models.ForeignKey(
         "bandeja.Canal", on_delete=models.PROTECT, related_name="mensajes"
     )
+    conversacion = models.ForeignKey(
+        "bandeja.Conversacion",
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name="mensajes",
+        help_text="Conversación a la que pertenece. Nullable durante migraciones.",
+    )
     direccion = models.CharField(max_length=10, choices=DIRECCION_CHOICES)
     tipo_contenido = models.CharField(
         max_length=15, choices=TIPO_CONTENIDO_CHOICES, default="texto"
     )
     contenido = models.TextField(blank=True)
     wa_message_id = models.CharField(max_length=128, unique=True)
+    es_nota_privada = models.BooleanField(
+        default=False,
+        help_text="Si True, el mensaje no se envía al cliente — solo visible para agentes.",
+    )
     enviado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -53,6 +64,7 @@ class Mensaje(TimeStampedModel):
         indexes = [
             models.Index(fields=["contacto", "-timestamp"]),
             models.Index(fields=["direccion", "-timestamp"]),
+            models.Index(fields=["conversacion", "-timestamp"]),
         ]
 
     def __str__(self):
