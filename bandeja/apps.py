@@ -8,5 +8,5 @@ class BandejaConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
 
     def ready(self):
-        # Aquí se cargarán signals, registries, etc. en fases posteriores
-        pass
+        # Cargar acciones built-in del registry de macros
+        from bandeja.macros import builtin  # noqa: F401

@@ -32,6 +32,7 @@ from bandeja.models.etiqueta import (  # noqa: E402, F401
     Etiqueta,
 )
 from bandeja.models.respuesta import RespuestaGuardada  # noqa: E402, F401
+from bandeja.models.macro import EjecucionMacro, Macro  # noqa: E402, F401
 
 __all__ = [
     "TimeStampedModel",
@@ -44,4 +45,6 @@ __all__ = [
     "ContactoEtiqueta",
     "ConversacionEtiqueta",
     "RespuestaGuardada",
+    "Macro",
+    "EjecucionMacro",
 ]
