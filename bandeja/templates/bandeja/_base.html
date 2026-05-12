@@ -1,0 +1,43 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Bandeja{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+  <script src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
+  <style>
+    :root { --brand: #c0392b; }
+    .badge { display:inline-flex; padding: 2px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+    .badge-gris { background:#f3f4f6; color:#374151; }
+    .badge-azul { background:#dbeafe; color:#1e40af; }
+    .badge-amarillo { background:#fef3c7; color:#92400e; }
+    .badge-violeta { background:#ede9fe; color:#5b21b6; }
+    .badge-rojo { background:#fee2e2; color:#991b1b; }
+    .badge-verde { background:#d1fae5; color:#065f46; }
+    .badge-sla-warn { background:#fee2e2; color:#991b1b; border: 1px solid #fca5a5; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  {% block header %}
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-bold" style="color: var(--brand);">Bandeja</span>
+      </div>
+      <nav class="flex items-center gap-4 text-sm">
+        <a href="{% url 'bandeja:inbox' %}" class="hover:text-slate-900">Conversaciones</a>
+        <a href="{% url 'bandeja:etiquetas' %}" class="hover:text-slate-900">Etiquetas</a>
+        <a href="{% url 'bandeja:respuestas' %}" class="hover:text-slate-900">Respuestas</a>
+        {% if user.is_authenticated %}
+          <span class="text-slate-500">{{ user.get_full_name|default:user.username }}</span>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  {% endblock %}
+  <main class="max-w-7xl mx-auto px-6 py-6">{% block content %}{% endblock %}</main>
+</body>
+</html>

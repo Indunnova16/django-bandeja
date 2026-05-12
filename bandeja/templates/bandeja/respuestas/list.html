@@ -1,0 +1,35 @@
+{% extends 'bandeja/_base.html' %}
+{% block title %}Respuestas guardadas{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white rounded-lg border border-slate-200">
+  <header class="p-4 border-b border-slate-200">
+    <h1 class="font-semibold">Respuestas guardadas</h1>
+    <p class="text-xs text-slate-500">Invócalas desde el composer escribiendo <code>/slug</code>.</p>
+  </header>
+  <form method="post" class="p-4 border-b border-slate-200 space-y-2">
+    {% csrf_token %}
+    <div class="grid grid-cols-12 gap-2">
+      <input type="text" name="slug" pattern="[a-z0-9-]+" required placeholder="slug" class="col-span-3 border rounded px-2 py-1 text-sm" />
+      <input type="text" name="titulo" required placeholder="Título" class="col-span-9 border rounded px-2 py-1 text-sm" />
+    </div>
+    <textarea name="cuerpo" required placeholder="Cuerpo de la respuesta…" rows="3" class="w-full border rounded px-2 py-2 text-sm"></textarea>
+    <button type="submit" class="bg-slate-900 text-white text-sm rounded px-4 py-1.5">Guardar</button>
+  </form>
+  <ul class="divide-y divide-slate-100">
+    {% for r in respuestas %}
+      <li class="p-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="font-mono text-xs text-slate-500">/{{ r.slug }}</span>
+            <span class="font-medium text-sm">{{ r.titulo }}</span>
+          </div>
+          <span class="text-[10px] text-slate-400">{{ r.usada_n_veces }} usos</span>
+        </div>
+        <p class="text-xs text-slate-600 mt-1 whitespace-pre-wrap">{{ r.cuerpo }}</p>
+      </li>
+    {% empty %}
+      <li class="p-6 text-center text-slate-400 text-sm">Sin respuestas aún.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

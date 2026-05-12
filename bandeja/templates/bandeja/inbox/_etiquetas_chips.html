@@ -1,0 +1,16 @@
+<div class="flex flex-wrap gap-1 items-center" hx-target="#etiquetas-chips" hx-swap="innerHTML">
+  {% for e in etiquetas_disponibles %}
+    <form hx-post="{% url 'bandeja:toggle_etiqueta' conversacion.id %}" class="inline">
+      {% csrf_token %}
+      <input type="hidden" name="slug" value="{{ e.slug }}" />
+      <button type="submit" class="px-2 py-0.5 rounded text-[11px] border"
+              style="{% if e.id in etiquetas_aplicadas_ids %}background:{{ e.color }};color:white;border-color:{{ e.color }}{% else %}border-color:{{ e.color }}55;color:{{ e.color }}{% endif %}">
+        {{ e.nombre }}
+      </button>
+    </form>
+  {% endfor %}
+  {% if not etiquetas_disponibles %}
+    <span class="text-[11px] text-slate-400">Sin etiquetas — créalas en
+      <a href="{% url 'bandeja:etiquetas' %}" class="underline">/etiquetas</a></span>
+  {% endif %}
+</div>

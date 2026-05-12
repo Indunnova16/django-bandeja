@@ -1,0 +1,41 @@
+{% extends 'bandeja/_base.html' %}
+{% block title %}Bandeja de conversaciones{% endblock %}
+{% block content %}
+<div class="grid grid-cols-12 gap-4">
+  <aside class="col-span-4 bg-white rounded-lg border border-slate-200">
+    <div class="p-3 border-b border-slate-200 flex flex-wrap gap-1" id="tabs">
+      {% for code, label, count in tabs %}
+        <button
+          hx-get="{% url 'bandeja:inbox' %}?estado={{ code }}{% if etiqueta_filtro %}&etiqueta={{ etiqueta_filtro }}{% endif %}"
+          hx-target="#lista"
+          hx-push-url="true"
+          class="px-2.5 py-1 rounded text-xs font-medium {% if estado_actual == code %}bg-slate-900 text-white{% else %}bg-slate-100 hover:bg-slate-200 text-slate-700{% endif %}">
+          {{ label }} <span class="opacity-70">{{ count }}</span>
+        </button>
+      {% endfor %}
+    </div>
+    {% if etiquetas %}
+    <div class="p-3 border-b border-slate-200 flex flex-wrap gap-1">
+      <span class="text-[10px] uppercase tracking-wider text-slate-400 w-full">Filtrar por etiqueta</span>
+      <a href="{% url 'bandeja:inbox' %}?estado={{ estado_actual }}"
+         class="px-2 py-0.5 rounded text-[10px] {% if not etiqueta_filtro %}bg-slate-900 text-white{% else %}bg-slate-100 text-slate-600{% endif %}">
+        todas
+      </a>
+      {% for e in etiquetas %}
+        <a href="{% url 'bandeja:inbox' %}?estado={{ estado_actual }}&etiqueta={{ e.slug }}"
+           class="px-2 py-0.5 rounded text-[10px] {% if etiqueta_filtro == e.slug %}text-white{% else %}text-slate-700{% endif %}"
+           style="background:{% if etiqueta_filtro == e.slug %}{{ e.color }}{% else %}{{ e.color }}22{% endif %}">
+          {{ e.nombre }}
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div id="lista">
+      {% include 'bandeja/inbox/_lista.html' %}
+    </div>
+  </aside>
+  <section class="col-span-8 bg-white rounded-lg border border-slate-200 min-h-[70vh] flex items-center justify-center text-slate-400">
+    Selecciona una conversación
+  </section>
+</div>
+{% endblock %}

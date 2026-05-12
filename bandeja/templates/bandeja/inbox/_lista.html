@@ -1,0 +1,37 @@
+{% load bandeja_tags %}
+<ul class="divide-y divide-slate-100 max-h-[75vh] overflow-y-auto">
+  {% for c in conversaciones %}
+    <li>
+      <a href="{% url 'bandeja:conversacion' c.id %}"
+         hx-get="{% url 'bandeja:conversacion' c.id %}"
+         hx-target="body section.col-span-8"
+         hx-push-url="true"
+         hx-select="#panel-conversacion"
+         class="block px-3 py-3 hover:bg-slate-50">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-medium text-sm truncate">{{ c.contacto.nombre }}</span>
+          <span class="text-[10px] text-slate-400">{{ c.fecha_ultimo_mensaje|default:c.fecha_apertura|date:"d M" }}</span>
+        </div>
+        <div class="text-xs text-slate-500 truncate">{{ c.ultimo_mensaje|default:"(sin mensajes)"|truncatechars:80 }}</div>
+        <div class="mt-1 flex items-center gap-2 flex-wrap">
+          {% include 'bandeja/inbox/_estado_badge.html' with conversacion=c %}
+          {% if c.asesor_asignado %}
+            <span class="text-[10px] text-slate-500">{{ c.asesor_asignado|nombre_asesor }}</span>
+          {% else %}
+            <span class="text-[10px] text-amber-600">sin asignar</span>
+          {% endif %}
+          {% if c.sla.respondida == False and c.sla.ok == False %}
+            <span class="badge badge-sla-warn">SLA vencido</span>
+          {% endif %}
+          {% for rel in c.etiquetas_rel.all %}
+            <span class="px-1.5 py-0.5 rounded text-[10px]" style="background:{{ rel.etiqueta.color }}22;color:{{ rel.etiqueta.color }};">
+              {{ rel.etiqueta.nombre }}
+            </span>
+          {% endfor %}
+        </div>
+      </a>
+    </li>
+  {% empty %}
+    <li class="p-4 text-sm text-slate-400 text-center">No hay conversaciones en este estado.</li>
+  {% endfor %}
+</ul>

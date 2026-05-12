@@ -1,0 +1,5 @@
+{% with e=conversacion.estado %}
+<span class="badge {% if e == 'abierta' %}badge-azul{% elif e == 'pendiente' %}badge-amarillo{% elif e == 'pospuesta' %}badge-violeta{% elif e == 'resuelta' %}badge-verde{% else %}badge-gris{% endif %}">
+  {{ conversacion.get_estado_display }}{% if e == 'pospuesta' and conversacion.pospuesta_hasta %} · vuelve {{ conversacion.pospuesta_hasta|date:"d M H:i" }}{% endif %}
+</span>
+{% endwith %}

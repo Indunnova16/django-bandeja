@@ -1,0 +1,44 @@
+{% extends 'bandeja/_base.html' %}
+{% block title %}Etiquetas{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-lg border border-slate-200">
+  <header class="p-4 border-b border-slate-200 flex items-center justify-between">
+    <h1 class="font-semibold">Etiquetas</h1>
+    <span class="text-xs text-slate-400">{{ etiquetas|length }} totales</span>
+  </header>
+  <form method="post" class="p-4 border-b border-slate-200 grid grid-cols-12 gap-2 items-end">
+    {% csrf_token %}
+    <div class="col-span-3">
+      <label class="text-xs text-slate-500">Slug</label>
+      <input type="text" name="slug" required pattern="[a-z0-9-]+" class="w-full border rounded px-2 py-1 text-sm" placeholder="vip" />
+    </div>
+    <div class="col-span-5">
+      <label class="text-xs text-slate-500">Nombre</label>
+      <input type="text" name="nombre" required class="w-full border rounded px-2 py-1 text-sm" placeholder="Cliente VIP" />
+    </div>
+    <div class="col-span-2">
+      <label class="text-xs text-slate-500">Color</label>
+      <input type="color" name="color" value="#2563eb" class="w-full h-9 rounded" />
+    </div>
+    <div class="col-span-2">
+      <button type="submit" class="w-full bg-slate-900 text-white text-sm rounded px-3 py-2">Crear</button>
+    </div>
+  </form>
+  <ul class="divide-y divide-slate-100">
+    {% for e in etiquetas %}
+      <li class="p-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-[11px]" style="background:{{ e.color }};color:white;">{{ e.nombre }}</span>
+          <span class="text-xs text-slate-400">/{{ e.slug }}</span>
+        </div>
+        <button hx-post="{% url 'bandeja:etiqueta_toggle' e.slug %}" hx-swap="none"
+                class="text-xs {% if e.activa %}text-emerald-600{% else %}text-slate-400{% endif %}">
+          {% if e.activa %}activa{% else %}inactiva{% endif %}
+        </button>
+      </li>
+    {% empty %}
+      <li class="p-6 text-center text-slate-400 text-sm">Aún no hay etiquetas.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -8,7 +8,8 @@ def test_version():
 
 
 def test_conf_defaults():
-    assert conf.get_channels() == {}
+    # En tests/settings.py se configura un canal `principal` para tests funcionales
+    assert "principal" in conf.get_channels()
     assert conf.get_sla_primera_respuesta_min() == 15
     assert conf.is_csat_enabled() is False
     assert "LeastBusyStrategy" in conf.get_assignment_strategy_path()
