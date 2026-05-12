@@ -1,7 +1,7 @@
 """Modelos del paquete bandeja.
 
-Los modelos concretos se agregarán en fases posteriores:
-- Fase 1: Contacto, Mensaje, Canal, BandejaAgentProfile
+Fases:
+- Fase 1: Contacto, Mensaje, Canal, BandejaAgentProfile (este archivo)
 - Fase 3: Conversacion, Etiqueta, RespuestaGuardada
 - Fase 4: Macro, EjecucionMacro
 - Fase 5: EncuestaCSAT, Mencion, BitacoraContacto
@@ -19,3 +19,17 @@ class TimeStampedModel(models.Model):
     class Meta:
         abstract = True
         app_label = "bandeja"
+
+
+from bandeja.models.canal import Canal  # noqa: E402, F401
+from bandeja.models.contacto import Contacto  # noqa: E402, F401
+from bandeja.models.mensaje import Mensaje  # noqa: E402, F401
+from bandeja.models.agente import BandejaAgentProfile  # noqa: E402, F401
+
+__all__ = [
+    "TimeStampedModel",
+    "Canal",
+    "Contacto",
+    "Mensaje",
+    "BandejaAgentProfile",
+]
