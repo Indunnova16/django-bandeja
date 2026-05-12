@@ -2,8 +2,8 @@
 {% load bandeja_tags %}
 {% block title %}{{ conversacion.contacto.nombre }}{% endblock %}
 {% block content %}
-<div class="grid grid-cols-12 gap-4">
-  <aside class="col-span-4 bg-white rounded-lg border border-slate-200">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+  <aside class="md:col-span-4 bg-white rounded-lg border border-slate-200 order-2 md:order-1">
     <div class="p-3 border-b border-slate-200 text-sm">
       <a href="{% url 'bandeja:inbox' %}" class="text-slate-500 hover:text-slate-800">← Volver a bandeja</a>
     </div>
@@ -11,19 +11,19 @@
        UI específica del dominio (Oportunidad, Cotización, Pedido, …). #}
     {% include 'bandeja/inbox/_objeto_negocio_panel.html' %}
   </aside>
-  <section id="panel-conversacion" class="col-span-8 bg-white rounded-lg border border-slate-200 flex flex-col min-h-[80vh]">
-    <header class="p-4 border-b border-slate-200">
-      <div class="flex items-center justify-between gap-4">
-        <div>
-          <h2 class="font-semibold text-lg">{{ conversacion.contacto.nombre }}</h2>
-          <p class="text-xs text-slate-500">
+  <section id="panel-conversacion" class="md:col-span-8 bg-white rounded-lg border border-slate-200 flex flex-col min-h-[60vh] md:min-h-[80vh] order-1 md:order-2">
+    <header class="p-3 sm:p-4 border-b border-slate-200">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
+        <div class="min-w-0">
+          <h2 class="font-semibold text-base sm:text-lg truncate">{{ conversacion.contacto.nombre }}</h2>
+          <p class="text-xs text-slate-500 break-words">
             {{ conversacion.contacto.wa_phone }}
             {% if conversacion.contacto.empresa %}· {{ conversacion.contacto.empresa }}{% endif %}
             · {{ conversacion.contacto.get_fuente_display }}
             {% if conversacion.asesor_asignado %}· asesor: {{ conversacion.asesor_asignado|nombre_asesor }}{% endif %}
           </p>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           <span id="estado-actual">{% include 'bandeja/inbox/_estado_badge.html' %}</span>
           <details class="relative">
             <summary class="cursor-pointer px-3 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200">Acciones ▾</summary>

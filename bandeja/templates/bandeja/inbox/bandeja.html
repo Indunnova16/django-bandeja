@@ -1,8 +1,8 @@
 {% extends 'bandeja/_base.html' %}
 {% block title %}Bandeja de conversaciones{% endblock %}
 {% block content %}
-<div class="grid grid-cols-12 gap-4">
-  <aside class="col-span-4 bg-white rounded-lg border border-slate-200">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+  <aside class="md:col-span-4 bg-white rounded-lg border border-slate-200">
     <div class="p-3 border-b border-slate-200 flex flex-wrap gap-1" id="tabs">
       {% for code, label, count in tabs %}
         <button
@@ -34,7 +34,7 @@
       {% include 'bandeja/inbox/_lista.html' %}
     </div>
   </aside>
-  <section class="col-span-8 bg-white rounded-lg border border-slate-200 min-h-[70vh] flex items-center justify-center text-slate-400">
+  <section class="md:col-span-8 bg-white rounded-lg border border-slate-200 min-h-[30vh] md:min-h-[70vh] flex items-center justify-center text-slate-400 text-sm">
     Selecciona una conversación
   </section>
 </div>

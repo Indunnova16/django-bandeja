@@ -23,21 +23,21 @@
 <body class="bg-slate-50 text-slate-800 min-h-screen">
   {% block header %}
   <header class="bg-white border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-3">
         <span class="text-xl font-bold" style="color: var(--brand);">Bandeja</span>
       </div>
-      <nav class="flex items-center gap-4 text-sm">
+      <nav class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
         <a href="{% url 'bandeja:inbox' %}" class="hover:text-slate-900">Conversaciones</a>
         <a href="{% url 'bandeja:etiquetas' %}" class="hover:text-slate-900">Etiquetas</a>
         <a href="{% url 'bandeja:respuestas' %}" class="hover:text-slate-900">Respuestas</a>
         {% if user.is_authenticated %}
-          <span class="text-slate-500">{{ user.get_full_name|default:user.username }}</span>
+          <span class="text-slate-500 truncate max-w-[160px]">{{ user.get_full_name|default:user.username }}</span>
         {% endif %}
       </nav>
     </div>
   </header>
   {% endblock %}
-  <main class="max-w-7xl mx-auto px-6 py-6">{% block content %}{% endblock %}</main>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">{% block content %}{% endblock %}</main>
 </body>
 </html>
