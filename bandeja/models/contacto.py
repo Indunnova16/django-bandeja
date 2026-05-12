@@ -36,6 +36,13 @@ class Contacto(TimeStampedModel):
     notas = models.TextField(blank=True)
     fecha_primer_mensaje = models.DateTimeField(null=True, blank=True)
     fecha_ultimo_mensaje = models.DateTimeField(null=True, blank=True)
+    fusionado_en = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name="fusionados",
+        help_text="Contacto destino si éste fue fusionado.",
+    )
 
     class Meta:
         app_label = "bandeja"

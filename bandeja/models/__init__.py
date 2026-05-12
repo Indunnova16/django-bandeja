@@ -33,6 +33,9 @@ from bandeja.models.etiqueta import (  # noqa: E402, F401
 )
 from bandeja.models.respuesta import RespuestaGuardada  # noqa: E402, F401
 from bandeja.models.macro import EjecucionMacro, Macro  # noqa: E402, F401
+from bandeja.models.csat import EncuestaCSAT  # noqa: E402, F401
+from bandeja.models.mencion import Mencion  # noqa: E402, F401
+from bandeja.models.bitacora_contacto import BitacoraContacto  # noqa: E402, F401
 
 __all__ = [
     "TimeStampedModel",
@@ -47,4 +50,7 @@ __all__ = [
     "RespuestaGuardada",
     "Macro",
     "EjecucionMacro",
+    "EncuestaCSAT",
+    "Mencion",
+    "BitacoraContacto",
 ]
